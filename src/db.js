@@ -11,7 +11,7 @@ const db = {
             pass: process.env.MONGODB_PASS
         });
 
-        const documents = Mail.find({ sender }).exec();
+        const documents = await Mail.find({ sender }).exec();
 
         return documents;
     }
