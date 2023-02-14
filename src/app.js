@@ -6,8 +6,8 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.post('/mails', (req, res) => {
-    const mails = getMailsFromSender(req.body.sender);
+app.post('/mails', async (req, res) => {
+    const mails = await getMailsFromSender(req.body.sender);
 
     return res.status(200).json(mails);
 });
