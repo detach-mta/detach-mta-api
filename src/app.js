@@ -6,6 +6,10 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.use((req, res) => {
+    res.setHeader('Access-Control-Allowed-Origin', '*');
+});
+
 app.post('/mails', async (req, res) => {
     const mails = await getMailsFromSender(req.body.sender);
 
