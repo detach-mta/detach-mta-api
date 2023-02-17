@@ -6,8 +6,9 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use((req, res) => {
+app.use((req, res, next) => {
     res.setHeader('Access-Control-Allowed-Origin', '*');
+    next();
 });
 
 app.post('/mails', async (req, res) => {
