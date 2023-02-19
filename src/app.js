@@ -1,20 +1,35 @@
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const express = require('express');
-const { getMailsFromSender } = require('./db');
+const { getMailsFromSender, getSystemMetrics } = require('./db');
 const app = express();
 
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allowed-Origin', '*');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     next();
 });
 
+/**
+ * Get metrics from a specific email address
+ */
 app.post('/mails', async (req, res) => {
     const mails = await getMailsFromSender(req.body.sender);
 
     return res.status(200).json(mails);
+});
+
+/**
+ * Get metrics from the overall system
+ */
+app.get('/mails', async (req, res) => {
+    const metrics = await getSystemMetrics();
+
+    return res.status(200).json(metrics);
 });
 
 const PORT = process.env.NODE_PORT ?? 3000;
