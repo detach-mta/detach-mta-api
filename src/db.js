@@ -2,18 +2,18 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Mail = require('./model');
 
+async function connect() {
+    await mongoose.connect(process.env.MONGODB_URL, {
+        authSource: 'admin',
+        user: process.env.MONGODB_USER,
+        pass: process.env.MONGODB_PASS
+    });
+}
+
 const db = {
 
-    async connect() {
-        await mongoose.connect(process.env.MONGODB_URL, {
-            authSource: 'admin',
-            user: process.env.MONGODB_USER,
-            pass: process.env.MONGODB_PASS
-        });
-    },
-
     async getMailsFromSender(sender) {
-        await this.connect();
+        await connect();
 
         const documents = await Mail.find({ sender }).exec();
 
@@ -21,21 +21,21 @@ const db = {
     },
 
     async getSystemMetrics() {
-        await this.connect();
+        await connect();
 
         const agg = await Mail.aggregate([{
             $group: {
+                "_id": 1,
                 totalInbound: { $sum: "$inboundSize" },
-                totalOutbound: { $sum: "$outboundSize" }
+                totalOutbound: { $sum: "$outboundSize" },
+                totalCount: { $sum: 1}
             }
         }]).exec();
 
-        const totalCount = await Mail.count();
         const totalAttachments = await Mail.count({ hasAttachments: true });
     
         return {
             ...agg,
-            totalCount,
             totalAttachments
         };
     }
