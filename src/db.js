@@ -30,12 +30,12 @@ const db = {
                 totalOutbound: { $sum: "$outboundSize" },
                 totalCount: { $sum: 1}
             }
-        }]).exec();
+        }]);
 
         const totalAttachments = await Mail.count({ hasAttachments: true });
     
         return {
-            ...agg,
+            ...agg[0],
             totalAttachments
         };
     }
