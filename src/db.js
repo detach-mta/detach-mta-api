@@ -26,7 +26,9 @@ const db = {
         const agg = await Mail.aggregate([{
             $match: {
                 sender
-            },
+            }    
+        },
+        {
             $group: {
                 "_id": 1,
                 totalInbound: { $sum: "$inboundSize" },
