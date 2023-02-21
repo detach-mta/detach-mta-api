@@ -1,7 +1,7 @@
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const express = require('express');
-const { getMailsFromSender, getSystemMetrics } = require('./db');
+const { getMailsFromSender, getSystemMetrics, getMetricsFromSender } = require('./db');
 const app = express();
 
 app.use(bodyParser.json());
