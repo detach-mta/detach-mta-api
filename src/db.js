@@ -20,6 +20,29 @@ const db = {
         return documents;
     },
 
+    async getMetricsFromSender(sender) {
+        await connect();
+
+        const agg = await Mail.aggregate([{
+            $match: {
+                sender
+            },
+            $group: {
+                "_id": 1,
+                totalInbound: { $sum: "$inboundSize" },
+                totalOutbound: { $sum: "$outboundSize" },
+                totalCount: { $sum: 1 }
+            }
+        }]);   
+
+        const totalAttachments = await Mail.count({ sender, hasAttachments: true });
+
+        return {
+            ...agg[0],
+            totalAttachments
+        };
+    },
+
     async getSystemMetrics() {
         await connect();
 

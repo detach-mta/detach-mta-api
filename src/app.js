@@ -19,8 +19,12 @@ app.use((req, res, next) => {
  */
 app.post('/mails', async (req, res) => {
     const mails = await getMailsFromSender(req.body.sender);
+    const metrics = await getMetricsFromSender(req.body.sender);
 
-    return res.status(200).json(mails);
+    return res.status(200).json({
+        metrics,
+        mails
+    });
 });
 
 /**
