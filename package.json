@@ -1,14 +1,15 @@
 {
   "name": "detach-api",
   "version": "1.0.0",
-  "description": "API du projet Detach MTA",
+  "description": "API of the Detach MTA project",
   "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nkirchhoffer/detach-api.git"
+    "url": "git+https://github.com/detach-mta/detach-api.git"
   },
   "keywords": [
     "detach",
@@ -18,12 +19,15 @@
   "author": "Clebard Cloud <contact@clebard.cloud>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nkirchhoffer/detach-api/issues"
+    "url": "https://github.com/detach-mta/detach-api/issues"
   },
-  "homepage": "https://github.com/nkirchhoffer/detach-api#readme",
+  "homepage": "https://github.com/detach-mta/detach-api#readme",
   "dependencies": {
+    "body-parser": "^1.20.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongoose": "^6.9.1"
+    "mongoose": "^6.9.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.2"
   }
 }
