@@ -12,6 +12,11 @@ async function connect() {
 
 const db = {
 
+    /**
+     * 
+     * @param {string} sender
+     * @returns {{date:string, inboundSize:number, outboundSize:number, recipientsCount:number, hasAttachments: boolean}[]}
+     */
     async getMailsFromSender(sender) {
         await connect();
 
@@ -20,13 +25,18 @@ const db = {
         return documents;
     },
 
+    /**
+     * 
+     * @param {string} sender
+     * @returns {{totalInbound: number, totalOutbound: number, totalCount: number,totalAttachments: number}}
+     */
     async getMetricsFromSender(sender) {
         await connect();
 
         const agg = await Mail.aggregate([{
             $match: {
                 sender
-            }    
+            }
         },
         {
             $group: {
@@ -35,7 +45,7 @@ const db = {
                 totalOutbound: { $sum: "$outboundSize" },
                 totalCount: { $sum: 1 }
             }
-        }]);   
+        }]);
 
         const totalAttachments = await Mail.count({ sender, hasAttachments: true });
 
@@ -45,6 +55,10 @@ const db = {
         };
     },
 
+    /**
+     * 
+     * @returns {{totalInbound: number, totalOutbound: number, totalCount: number,totalAttachments: number}}
+     */
     async getSystemMetrics() {
         await connect();
 
@@ -53,12 +67,12 @@ const db = {
                 "_id": 1,
                 totalInbound: { $sum: "$inboundSize" },
                 totalOutbound: { $sum: "$outboundSize" },
-                totalCount: { $sum: 1}
+                totalCount: { $sum: 1 }
             }
         }]);
 
         const totalAttachments = await Mail.count({ hasAttachments: true });
-    
+
         return {
             ...agg[0],
             totalAttachments

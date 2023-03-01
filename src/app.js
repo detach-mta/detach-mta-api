@@ -1,7 +1,13 @@
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const express = require('express');
-const { getMailsFromSender, getSystemMetrics, getMetricsFromSender } = require('./db');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+const mailsRouter = require("./routes/mail");
+const swaggerOptions = require('./swagger');
+const swaggerSpecs = swaggerJsdoc(swaggerOptions);
+
 const app = express();
 
 app.use(bodyParser.json());
@@ -14,27 +20,10 @@ app.use((req, res, next) => {
     next();
 });
 
-/**
- * Get metrics from a specific email address
- */
-app.post('/mails', async (req, res) => {
-    const mails = await getMailsFromSender(req.body.sender);
-    const metrics = await getMetricsFromSender(req.body.sender);
 
-    return res.status(200).json({
-        metrics,
-        mails
-    });
-});
-
-/**
- * Get metrics from the overall system
- */
-app.get('/mails', async (req, res) => {
-    const metrics = await getSystemMetrics();
-
-    return res.status(200).json(metrics);
-});
+app.get('/ping', (_, res) => res.send('Hello friend'));
+app.use('/mails', mailsRouter);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 const PORT = process.env.NODE_PORT ?? 3000;
 app.listen(PORT, () => {
