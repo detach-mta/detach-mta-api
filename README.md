@@ -1,4 +1,4 @@
-# detach-api
+# detach-mta-api
 
 API of the Detach MTA project
 
